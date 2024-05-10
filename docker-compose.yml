@@ -54,6 +54,7 @@ services:
     volumes:
       - ./datasets/tweets:/tweets
       - ./datasets/data-who:/who
+      - ./scripts:/scripts
     env_file:
       - ./hadoop-hive.env
     environment:
