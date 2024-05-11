@@ -15,9 +15,7 @@ spark.sql("USE testdb1")
 
 # Query the 'who' table for the first 100 records and load data into a DataFrame
 df = spark.sql("SELECT * FROM who LIMIT 100")
-# Save DataFrame to Hive table
-table_name = "res_who"
-df.write.mode("overwrite").saveAsTable(table_name)
 
 # Perform further operations on the DataFrame as needed
+df.show()
 # Close the output file
