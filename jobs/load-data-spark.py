@@ -19,3 +19,8 @@ df = spark.sql("SELECT * FROM who LIMIT 100")
 # Perform further operations on the DataFrame as needed
 df.show()
 # Close the output file
+table_name = "res_who"
+df.write.mode("overwrite").saveAsTable(table_name)
+
+
+
