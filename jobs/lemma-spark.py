@@ -16,23 +16,29 @@ spark = SparkSession.builder \
 spark.sql("USE testdb1")
 
 # Query the 'who' table and load data into a DataFrame
-df = spark.sql("SELECT * FROM tweets limit 5;")
+df = spark.sql("SELECT * FROM tweet limit 5;")
+tweet = df.collect()[1]['original_text']
+# print(tweet)
+candidate_labels = ['travel', 'dancing','covid','politics','death']
+result = classifier(tweet, candidate_labels)
+label_score_pairs = [(label, score) for label, score in zip(result['labels'], result['scores'])]
+sorted_results = sorted(label_score_pairs, key=lambda x: x[1], reverse=True)
+print(sorted_results)
+# # Concatenate rows into a single string
+# concatenated_df = df.select(concat_ws(",", *df.columns).alias("concatenated_row"))
 
-# Concatenate rows into a single string
-concatenated_df = df.select(concat_ws(",", *df.columns).alias("concatenated_row"))
-
-# Show the concatenated DataFrame
-concatenated_df.show(truncate=False)
-for row in concatenated_df.collect():
-    sequence_to_classify = row
-    candidate_labels = ['real', 'fake']
-    classifier(sequence_to_classify, candidate_labels, multi_label=False)
-    print(sequence_to_classify['scores'], row)
-    print()
-    print()
-    print()
-    print()
-    print()
+# # Show the concatenated DataFrame
+# concatenated_df.show(truncate=False)
+# for row in concatenated_df.collect():
+#     sequence_to_classify = row
+#     candidate_labels = ['real', 'fake']
+#     classifier(sequence_to_classify, candidate_labels, multi_label=False)
+#     print(sequence_to_classify['scores'], row)
+#     print()
+#     print()
+#     print()
+#     print()
+#     print()
 
 
 # def tokenize_function(examples):
