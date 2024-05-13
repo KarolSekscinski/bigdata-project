@@ -16,14 +16,27 @@ spark = SparkSession.builder \
 spark.sql("USE testdb1")
 
 # Query the 'who' table and load data into a DataFrame
-df = spark.sql("SELECT * FROM tweet limit 5;")
-tweet = df.collect()[1]['original_text']
+df = spark.sql("SELECT * FROM tweet limit 150;")
+tweets = [row.original_text for row in df.select('original_text').limit(10).collect()]
+print(tweets)
 # print(tweet)
-candidate_labels = ['travel', 'dancing','covid','politics','death']
-result = classifier(tweet, candidate_labels)
-label_score_pairs = [(label, score) for label, score in zip(result['labels'], result['scores'])]
-sorted_results = sorted(label_score_pairs, key=lambda x: x[1], reverse=True)
-print(sorted_results)
+candidate_labels = ['covid','politics','death','infection']
+results = []
+for i,tweet in enumerate(tweets[1:]):
+    result = classifier(tweet, candidate_labels)
+    label_score_pairs = [(label, score) for label, score in zip(result['labels'], result['scores'])]
+    label_score_pairs.insert(0,result['sequence'])
+    # sorted_results = sorted(label_score_pairs, key=lambda x: x[1], reverse=True)
+    results.append(label_score_pairs)
+    print(i)
+# print(results)
+# sorted_results = sorted(results, key=lambda x: x[0][1], reverse=True)
+
+for item in results:
+    print(item[0])
+    print(item[1:])
+    print()
+
 # # Concatenate rows into a single string
 # concatenated_df = df.select(concat_ws(",", *df.columns).alias("concatenated_row"))
 
