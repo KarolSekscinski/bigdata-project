@@ -1,4 +1,4 @@
-FROM bitnami/spark:latest
+FROM bitnami/spark:3.2.1-debian-10-r24
 
 COPY requirements.txt .
 
@@ -7,4 +7,5 @@ USER root
 RUN apt-get clean  && \
     apt-get update && \
     apt-get install -y python3-pip && \
-    pip3 install -r ./requirements.txt
+    pip3 install -r ./requirements.txt && \
+    pip install tensorflow[and-cuda]
